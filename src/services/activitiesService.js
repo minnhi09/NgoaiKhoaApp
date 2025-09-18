@@ -16,16 +16,14 @@ import {
 const COL = "activities";
 
 export async function addActivity(uid, data) {
-  // data gồm: title*, date*, category*, organizer, location, hours, score, note, attachments[]
+  // data gồm: title*, date*, category*, location, score, note, attachments[]
   const ref = collection(db, COL);
   await addDoc(ref, {
     uid,
     title: data.title || "",
     date: data.date || null,
     category: data.category || "other",
-    organizer: data.organizer || "",
     location: data.location || "",
-    hours: Number(data.hours || 0),
     score: Number(data.score || 0),
     note: data.note || "",
     attachments: data.attachments || [],

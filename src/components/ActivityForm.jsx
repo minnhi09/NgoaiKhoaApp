@@ -5,9 +5,7 @@ export default function ActivityForm({ onCreate }) {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [category, setCategory] = useState("volunteer");
-  const [organizer, setOrganizer] = useState("");
   const [location, setLocation] = useState("");
-  const [hours, setHours] = useState(0);
   const [score, setScore] = useState(0);
   const [note, setNote] = useState("");
   const [attachments, setAttachments] = useState([]);
@@ -21,9 +19,7 @@ export default function ActivityForm({ onCreate }) {
         title,
         date,
         category,
-        organizer,
         location,
-        hours,
         score,
         note,
         attachments,
@@ -31,9 +27,7 @@ export default function ActivityForm({ onCreate }) {
       setTitle("");
       setDate("");
       setCategory("volunteer");
-      setOrganizer("");
       setLocation("");
-      setHours(0);
       setScore(0);
       setNote("");
       setAttachments([]);
@@ -104,61 +98,32 @@ export default function ActivityForm({ onCreate }) {
         </div>
       </div>
 
-      {/* Ban tổ chức và Địa điểm */}
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Ban tổ chức
-          </label>
-          <input
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Tên ban tổ chức"
-            value={organizer}
-            onChange={(e) => setOrganizer(e.target.value)}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Địa điểm
-          </label>
-          <input
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Địa điểm tổ chức"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
-        </div>
+      {/* Địa điểm */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Địa điểm
+        </label>
+        <input
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Địa điểm tổ chức"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+        />
       </div>
 
-      {/* Số giờ và Điểm */}
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Số giờ tham gia
-          </label>
-          <input
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            type="number"
-            min="0"
-            step="0.5"
-            placeholder="0"
-            value={hours}
-            onChange={(e) => setHours(e.target.value)}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Điểm đạt được
-          </label>
-          <input
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            type="number"
-            min="0"
-            placeholder="0"
-            value={score}
-            onChange={(e) => setScore(e.target.value)}
-          />
-        </div>
+      {/* Điểm */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Điểm đạt được
+        </label>
+        <input
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          type="number"
+          min="0"
+          placeholder="0"
+          value={score}
+          onChange={(e) => setScore(e.target.value)}
+        />
       </div>
 
       {/* Ghi chú */}

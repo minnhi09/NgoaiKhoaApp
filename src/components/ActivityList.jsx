@@ -75,24 +75,12 @@ export default function ActivityList({ items, onEdit, onDelete }) {
                   <span className="font-medium">Ngày:</span>
                   <div>{activity.date || "Chưa cập nhật"}</div>
                 </div>
-                {activity.organizer && (
-                  <div>
-                    <span className="font-medium">Ban tổ chức:</span>
-                    <div>{activity.organizer}</div>
-                  </div>
-                )}
                 {activity.location && (
                   <div>
                     <span className="font-medium">Địa điểm:</span>
                     <div>{activity.location}</div>
                   </div>
                 )}
-                <div>
-                  <span className="font-medium">Thời lượng:</span>
-                  <div>
-                    {activity.hours ? `${activity.hours} giờ` : "Chưa cập nhật"}
-                  </div>
-                </div>
               </div>
 
               <div className="flex items-center gap-6 text-sm mb-3">

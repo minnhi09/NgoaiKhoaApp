@@ -7,6 +7,7 @@ import {
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
+import { ensureUserProfile } from "../services/userService.js";
 
 const AuthContext = createContext(null);
 
@@ -15,7 +16,15 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
+    const unsub = onAuthStateChanged(auth, async (u) => {
+      if (u) {
+        // Đảm bảo user profile tồn tại khi login
+        try {
+          await ensureUserProfile(u.uid, u.email);
+        } catch (error) {
+          console.error("Error ensuring user profile:", error);
+        }
+      }
       setUser(u || null);
       setLoading(false);
     });
@@ -25,8 +34,13 @@ export function AuthProvider({ children }) {
   // API đơn giản để component khác gọi
   const login = (email, password) =>
     signInWithEmailAndPassword(auth, email, password);
-  const register = (email, password) =>
-    createUserWithEmailAndPassword(auth, email, password);
+
+  const register = async (email, password) => {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    // Profile sẽ được tạo tự động trong onAuthStateChanged
+    return result;
+  };
+
   const logout = () => signOut(auth);
 
   return (

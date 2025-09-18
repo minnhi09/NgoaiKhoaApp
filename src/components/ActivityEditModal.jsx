@@ -6,9 +6,7 @@ export default function ActivityEditModal({ activity, onSave, onClose }) {
     title: "",
     date: "",
     category: "volunteer",
-    organizer: "",
     location: "",
-    hours: 0,
     score: 0,
     note: "",
     attachments: [],
@@ -21,9 +19,7 @@ export default function ActivityEditModal({ activity, onSave, onClose }) {
         title: activity.title || "",
         date: activity.date || "",
         category: activity.category || "volunteer",
-        organizer: activity.organizer || "",
         location: activity.location || "",
-        hours: activity.hours || 0,
         score: activity.score || 0,
         note: activity.note || "",
         attachments: activity.attachments || [],
@@ -139,61 +135,32 @@ export default function ActivityEditModal({ activity, onSave, onClose }) {
             </div>
           </div>
 
-          {/* Ban tổ chức và Địa điểm */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Ban tổ chức
-              </label>
-              <input
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                value={formData.organizer}
-                onChange={(e) => handleInputChange("organizer", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Địa điểm
-              </label>
-              <input
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                value={formData.location}
-                onChange={(e) => handleInputChange("location", e.target.value)}
-              />
-            </div>
+          {/* Địa điểm */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Địa điểm
+            </label>
+            <input
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              value={formData.location}
+              onChange={(e) => handleInputChange("location", e.target.value)}
+            />
           </div>
 
-          {/* Số giờ và Điểm */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Số giờ tham gia
-              </label>
-              <input
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                type="number"
-                min="0"
-                step="0.5"
-                value={formData.hours}
-                onChange={(e) =>
-                  handleInputChange("hours", Number(e.target.value))
-                }
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Điểm đạt được
-              </label>
-              <input
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                type="number"
-                min="0"
-                value={formData.score}
-                onChange={(e) =>
-                  handleInputChange("score", Number(e.target.value))
-                }
-              />
-            </div>
+          {/* Điểm */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Điểm đạt được
+            </label>
+            <input
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              type="number"
+              min="0"
+              value={formData.score}
+              onChange={(e) =>
+                handleInputChange("score", Number(e.target.value))
+              }
+            />
           </div>
 
           {/* Ghi chú */}

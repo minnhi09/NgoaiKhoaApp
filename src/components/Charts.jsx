@@ -135,13 +135,11 @@ export function MonthlyChart({ activities }) {
       acc[monthKey] = {
         activities: 0,
         score: 0,
-        hours: 0,
       };
     }
 
     acc[monthKey].activities += 1;
     acc[monthKey].score += activity.score || 0;
-    acc[monthKey].hours += activity.hours || 0;
 
     return acc;
   }, {});

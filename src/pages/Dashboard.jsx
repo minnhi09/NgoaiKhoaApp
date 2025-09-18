@@ -17,7 +17,7 @@ import {
 import { getUserProfile, updateScoreTarget } from "../services/userService.js";
 
 export default function Dashboard() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [items, setItems] = useState([]);
   const [editingActivity, setEditingActivity] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
@@ -29,7 +29,6 @@ export default function Dashboard() {
   // Tính toán thống kê
   const stats = {
     totalActivities: items.length,
-    totalHours: items.reduce((sum, item) => sum + (item.hours || 0), 0),
     totalScore: items.reduce((sum, item) => sum + (item.score || 0), 0),
     activitiesThisMonth: items.filter((item) => {
       if (!item.date) return false;
@@ -46,7 +45,10 @@ export default function Dashboard() {
     if (!user) return;
 
     // Load activities
-    const unsub = subscribeMyActivities(user.uid, setItems);
+    const unsub = subscribeMyActivities(user.uid, (activities) => {
+      console.log("Activities loaded:", activities);
+      setItems(activities);
+    });
 
     // Load user profile
     getUserProfile(user.uid).then(setUserProfile).catch(console.error);
@@ -55,7 +57,13 @@ export default function Dashboard() {
   }, [user]);
 
   async function handleCreate(data) {
-    await addActivity(user.uid, data);
+    console.log("Creating activity:", data);
+    try {
+      await addActivity(user.uid, data);
+      console.log("Activity created successfully");
+    } catch (error) {
+      console.error("Error creating activity:", error);
+    }
   }
 
   async function handleDelete(id) {
@@ -69,8 +77,14 @@ export default function Dashboard() {
   }
 
   async function handleSaveEdit(id, data) {
-    await updateActivity(id, data);
-    setEditingActivity(null);
+    console.log("Updating activity:", id, data);
+    try {
+      await updateActivity(id, data);
+      console.log("Activity updated successfully");
+      setEditingActivity(null);
+    } catch (error) {
+      console.error("Error updating activity:", error);
+    }
   }
 
   async function handleUpdateTarget(newTarget) {
@@ -82,22 +96,8 @@ export default function Dashboard() {
     setFilters(newFilters);
   };
 
-  async function handleSaveEdit(activityId, formData) {
-    await updateActivity(activityId, formData);
-    setEditingActivity(null);
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="sticky top-0 bg-white border-b">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
-          <h1 className="text-xl font-semibold">Dashboard của {user?.email}</h1>
-          <button onClick={logout} className="rounded-xl px-3 py-2 border">
-            Đăng xuất
-          </button>
-        </div>
-      </header>
-
       <main className="max-w-7xl mx-auto px-4 py-6 space-y-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -113,22 +113,6 @@ export default function Dashboard() {
                   strokeLinejoin="round"
                   strokeWidth={2}
                   d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                />
-              </svg>
-            }
-          />
-          <StatsCard
-            title="Tổng giờ"
-            value={stats.totalHours}
-            subtitle="giờ tham gia"
-            color="green"
-            icon={
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
             }

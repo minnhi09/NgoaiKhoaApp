@@ -8,8 +8,6 @@ export default function SearchFilter({ onFilterChange }) {
     dateTo: "",
     scoreMin: "",
     scoreMax: "",
-    hoursMin: "",
-    hoursMax: "",
   });
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -27,8 +25,6 @@ export default function SearchFilter({ onFilterChange }) {
       dateTo: "",
       scoreMin: "",
       scoreMax: "",
-      hoursMin: "",
-      hoursMax: "",
     };
     setFilters(emptyFilters);
     onFilterChange(emptyFilters);
@@ -82,7 +78,7 @@ export default function SearchFilter({ onFilterChange }) {
       <div className="mb-4">
         <input
           type="text"
-          placeholder="Tìm kiếm theo tên hoạt động, ban tổ chức, địa điểm..."
+          placeholder="Tìm kiếm theo tên hoạt động, địa điểm..."
           value={filters.search}
           onChange={(e) => handleFilterChange("search", e.target.value)}
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -141,7 +137,7 @@ export default function SearchFilter({ onFilterChange }) {
             </div>
           </div>
 
-          {/* Score and hours range */}
+          {/* Score range */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -170,36 +166,6 @@ export default function SearchFilter({ onFilterChange }) {
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Giờ từ
-              </label>
-              <input
-                type="number"
-                min="0"
-                step="0.5"
-                placeholder="0"
-                value={filters.hoursMin}
-                onChange={(e) => handleFilterChange("hoursMin", e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Giờ đến
-              </label>
-              <input
-                type="number"
-                min="0"
-                step="0.5"
-                placeholder="100"
-                value={filters.hoursMax}
-                onChange={(e) => handleFilterChange("hoursMax", e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
           </div>
         </div>
       )}
@@ -213,12 +179,7 @@ export function applyFilters(activities, filters) {
     // Search filter
     if (filters.search) {
       const searchTerm = filters.search.toLowerCase();
-      const searchableText = [
-        activity.title,
-        activity.organizer,
-        activity.location,
-        activity.note,
-      ]
+      const searchableText = [activity.title, activity.location, activity.note]
         .filter(Boolean)
         .join(" ")
         .toLowerCase();
@@ -246,14 +207,6 @@ export function applyFilters(activities, filters) {
       return false;
     }
     if (filters.scoreMax && (activity.score || 0) > Number(filters.scoreMax)) {
-      return false;
-    }
-
-    // Hours range filter
-    if (filters.hoursMin && (activity.hours || 0) < Number(filters.hoursMin)) {
-      return false;
-    }
-    if (filters.hoursMax && (activity.hours || 0) > Number(filters.hoursMax)) {
       return false;
     }
 

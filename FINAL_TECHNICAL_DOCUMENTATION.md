@@ -5,7 +5,7 @@
 **Tên dự án**: Ngoại Khóa App  
 **Mô tả**: Ứng dụng web theo dõi và quản lý hoạt động ngoại khóa cá nhân  
 **Công nghệ**: React + Firebase + Tailwind CSS v4  
-**Ngôn ngữ**: JavaScript (không TypeScript)  
+**Ngôn ngữ**: JavaScript (không TypeScript)
 
 ---
 
@@ -14,12 +14,14 @@
 ### Stack công nghệ
 
 #### Frontend
+
 - **React 19.1.1**: UI library với JSX syntax
-- **Vite 7.1.2**: Build tool và development server  
+- **Vite 7.1.2**: Build tool và development server
 - **React Router DOM 7.8.2**: Client-side routing
 - **Tailwind CSS 4.1.12**: Utility-first CSS framework
 
 #### Backend & Services
+
 - **Firebase Authentication**: Quản lý đăng nhập/đăng ký
 - **Firebase Firestore**: NoSQL database real-time
 - **Firebase Storage**: Lưu trữ file minh chứng (ảnh/PDF)
@@ -30,7 +32,7 @@
 src/
 ├── components/          # React components tái sử dụng
 │   ├── ActivityEditModal.jsx    # Modal chỉnh sửa hoạt động
-│   ├── ActivityForm.jsx         # Form thêm hoạt động mới  
+│   ├── ActivityForm.jsx         # Form thêm hoạt động mới
 │   ├── ActivityList.jsx         # Danh sách hoạt động với icons
 │   ├── Charts.jsx              # Biểu đồ thống kê (Donut + Bar)
 │   ├── ExportButton.jsx        # Xuất CSV
@@ -41,7 +43,7 @@ src/
 │   ├── ScoreTargetCard.jsx     # Card mục tiêu điểm
 │   ├── SearchFilter.jsx        # Bộ lọc và tìm kiếm
 │   └── StatsCard.jsx           # Thẻ thống kê
-├── contexts/            # React contexts  
+├── contexts/            # React contexts
 │   └── AuthContext.jsx          # Authentication state management
 ├── layouts/             # Layout components
 │   ├── AppLayout.jsx           # Layout có header/footer
@@ -54,7 +56,7 @@ src/
 │   └── RegisterPage.jsx        # Đăng ký
 ├── services/            # Business logic
 │   ├── activitiesService.js    # CRUD hoạt động
-│   ├── uploadService.js        # Upload file service  
+│   ├── uploadService.js        # Upload file service
 │   └── userService.js          # Quản lý user profile
 ├── utils/               # Utility functions
 │   └── csvExport.js            # Export CSV
@@ -71,19 +73,22 @@ src/
 **Chức năng**: Quản lý global authentication state
 
 **State Management**:
+
 ```javascript
-const [user, setUser] = useState(null);      // Current user
+const [user, setUser] = useState(null); // Current user
 const [loading, setLoading] = useState(true); // Auth loading
 ```
 
 **API Methods**:
+
 ```javascript
-login(email, password)    // → Promise<UserCredential>
-register(email, password) // → Promise<UserCredential> 
-logout()                  // → Promise<void>
+login(email, password); // → Promise<UserCredential>
+register(email, password); // → Promise<UserCredential>
+logout(); // → Promise<void>
 ```
 
 **Firebase Integration**:
+
 - `onAuthStateChanged`: Real-time auth state listener
 - `signInWithEmailAndPassword`: Email login
 - `createUserWithEmailAndPassword`: Registration
@@ -109,32 +114,37 @@ function ProtectedRoute({ children }) {
 **Role**: Main application interface và data orchestration
 
 **State Management**:
-```javascript  
-const [items, setItems] = useState([]);           // Danh sách activities
+
+```javascript
+const [items, setItems] = useState([]); // Danh sách activities
 const [editingActivity, setEditingActivity] = useState(null); // Activity đang edit
-const [userProfile, setUserProfile] = useState(null);        // User profile
-const [filters, setFilters] = useState({});                  // Filter state
+const [userProfile, setUserProfile] = useState(null); // User profile
+const [filters, setFilters] = useState({}); // Filter state
 ```
 
 **Computed Statistics**:
+
 ```javascript
 const stats = {
   totalActivities: items.length,
   totalScore: items.reduce((sum, item) => sum + (item.score || 0), 0),
-  activitiesThisMonth: items.filter(item => {
+  activitiesThisMonth: items.filter((item) => {
     const itemDate = new Date(item.date);
     const now = new Date();
-    return itemDate.getMonth() === now.getMonth() &&
-           itemDate.getFullYear() === now.getFullYear();
+    return (
+      itemDate.getMonth() === now.getMonth() &&
+      itemDate.getFullYear() === now.getFullYear()
+    );
   }).length,
 };
 ```
 
 **Real-time Data Sync**:
+
 ```javascript
 useEffect(() => {
   if (!user) return;
-  
+
   const unsub = subscribeMyActivities(user.uid, setItems);
   return () => unsub && unsub();
 }, [user]);
@@ -149,8 +159,9 @@ useEffect(() => {
 **Chức năng**: Form thêm hoạt động mới với file upload
 
 **Form Fields**:
+
 - `title` (string): Tên hoạt động
-- `date` (date): Ngày tham gia  
+- `date` (date): Ngày tham gia
 - `category` (enum): Loại hoạt động
 - `location` (string): Địa điểm
 - `score` (number): Điểm số
@@ -158,9 +169,10 @@ useEffect(() => {
 - `attachments` (array): Files đính kèm
 
 **File Upload Integration**:
+
 ```javascript
 const handleFileUpload = (uploadedFiles) => {
-  setAttachments(prev => [...prev, ...uploadedFiles]);
+  setAttachments((prev) => [...prev, ...uploadedFiles]);
 };
 ```
 
@@ -169,27 +181,30 @@ const handleFileUpload = (uploadedFiles) => {
 **Chức năng**: Hiển thị danh sách hoạt động với icons
 
 **Category Icons**:
+
 ```javascript
 const getCategoryIcon = (category) => {
   const icons = {
-    volunteer: "🤝",    // Tình nguyện
-    club: "👥",         // CLB/Đội nhóm
-    competition: "🏆",  // Cuộc thi
-    seminar: "💡",      // Hội thảo
-    cultural: "🎨",     // Văn hóa - Nghệ thuật  
-    sports: "⚽",       // Thể thao
-    academic: "📚",     // Học thuật
-    other: "📝",        // Khác
+    volunteer: "🤝", // Tình nguyện
+    club: "👥", // CLB/Đội nhóm
+    competition: "🏆", // Cuộc thi
+    seminar: "💡", // Hội thảo
+    cultural: "🎨", // Văn hóa - Nghệ thuật
+    sports: "⚽", // Thể thao
+    academic: "📚", // Học thuật
+    other: "📝", // Khác
   };
   return icons[category] || icons.other;
 };
 ```
 
 **Attachment Display**:
+
 - **Images**: Thumbnail 20x20px với preview
 - **PDFs**: Download button với filename
 
 **Enhanced Empty State**:
+
 ```javascript
 if (!items?.length) {
   return (
@@ -218,25 +233,27 @@ if (!items?.length) {
 
 ```javascript
 // Upload single file với progress tracking
-uploadActivityFile(file, uid, docId, onProgress) 
-  // → Promise<{ url, path, name, size, type }>
+uploadActivityFile(file, uid, docId, onProgress);
+// → Promise<{ url, path, name, size, type }>
 
 // Upload multiple files
-uploadMultipleFiles(files, uid, docId, onProgress)
-  // → Promise<Array<FileResult>>
+uploadMultipleFiles(files, uid, docId, onProgress);
+// → Promise<Array<FileResult>>
 
 // File validation
-validateFile(file)
-  // → { valid: boolean, error?: string }
+validateFile(file);
+// → { valid: boolean, error?: string }
 ```
 
 **File Path Structure**: `/{uid}/activities/{docId}/{filename}`
 
 **Supported Formats**:
+
 - **Images**: JPG, PNG, GIF (max 5MB)
 - **Documents**: PDF (max 10MB)
 
 **Progress Tracking**:
+
 ```javascript
 const onProgress = (progress) => {
   console.log(`Upload: ${progress}%`);
@@ -246,6 +263,7 @@ const onProgress = (progress) => {
 ### FileUpload.jsx
 
 **Features**:
+
 - Drag & drop interface
 - File validation với error messages
 - Real-time progress bars
@@ -261,6 +279,7 @@ const onProgress = (progress) => {
 **Components**:
 
 #### CategoryChart (Donut Chart)
+
 ```javascript
 // Phân bố hoạt động theo category
 const categoryData = activities.reduce((acc, activity) => {
@@ -269,8 +288,9 @@ const categoryData = activities.reduce((acc, activity) => {
 }, {});
 ```
 
-#### MonthlyChart (Bar Chart)  
-```javascript  
+#### MonthlyChart (Bar Chart)
+
+```javascript
 // Xu hướng theo tháng
 const monthlyData = activities.reduce((acc, activity) => {
   const month = activity.monthKey; // YYYY-MM format
@@ -280,6 +300,7 @@ const monthlyData = activities.reduce((acc, activity) => {
 ```
 
 **Enhanced Empty States**:
+
 - **CategoryChart**: 📊 emoji + "Chưa có dữ liệu phân loại"
 - **MonthlyChart**: 📈 emoji + "Chưa có dữ liệu theo tháng"
 
@@ -290,6 +311,7 @@ const monthlyData = activities.reduce((acc, activity) => {
 ### Collection Structure
 
 #### `activities` Collection
+
 ```javascript
 // Document structure
 {
@@ -312,7 +334,8 @@ const monthlyData = activities.reduce((acc, activity) => {
 }
 ```
 
-#### `userProfiles` Collection  
+#### `userProfiles` Collection
+
 ```javascript
 {
   email: string,
@@ -329,23 +352,24 @@ const monthlyData = activities.reduce((acc, activity) => {
 
 ```javascript
 // Thêm hoạt động mới
-addActivity(uid, data) 
-  // → Promise<string> (document ID)
+addActivity(uid, data);
+// → Promise<string> (document ID)
 
-// Lắng nghe real-time updates  
-subscribeMyActivities(uid, callback)
-  // → Function (unsubscribe)
-  
+// Lắng nghe real-time updates
+subscribeMyActivities(uid, callback);
+// → Function (unsubscribe)
+
 // Cập nhật hoạt động
-updateActivity(id, patch)
-  // → Promise<void>
-  
-// Xóa hoạt động  
-removeActivity(id)
-  // → Promise<void>
+updateActivity(id, patch);
+// → Promise<void>
+
+// Xóa hoạt động
+removeActivity(id);
+// → Promise<void>
 ```
 
 **Real-time Sync**:
+
 ```javascript
 export function subscribeMyActivities(uid, callback) {
   if (!uid) return () => {};
@@ -354,8 +378,8 @@ export function subscribeMyActivities(uid, callback) {
   const q = query(ref, where("uid", "==", uid));
 
   const unsub = onSnapshot(q, (snap) => {
-    const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    
+    const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+
     // Client-side sorting (tránh index requirement)
     const sortedList = list.sort((a, b) => {
       const aTime = a.createdAt?.toMillis?.() || 0;
@@ -375,21 +399,25 @@ export function subscribeMyActivities(uid, callback) {
 ## 🎨 UI/UX Features
 
 ### Responsive Design
+
 - **Mobile-first**: Tailwind responsive breakpoints
-- **Grid Layout**: Adaptive columns (lg:grid-cols-4)  
+- **Grid Layout**: Adaptive columns (lg:grid-cols-4)
 - **Touch-friendly**: Adequate tap targets
 
 ### Loading States
+
 - **Skeleton loading**: Cards và lists
 - **Progress bars**: File uploads
 - **Button states**: Disabled during operations
 
 ### Error Handling
+
 - **Form validation**: Client-side validation
-- **Firebase errors**: User-friendly error messages  
+- **Firebase errors**: User-friendly error messages
 - **Fallback UI**: Error boundaries
 
 ### Enhanced UX
+
 - **Empty states**: Friendly messaging với emoji
 - **Category icons**: Visual identification
 - **Real-time updates**: Instant sync
@@ -400,11 +428,12 @@ export function subscribeMyActivities(uid, callback) {
 ## 🔧 Development Workflow
 
 ### Build & Development
+
 ```bash
 # Development server
 npm run dev           # → http://localhost:5173
 
-# Production build  
+# Production build
 npm run build         # → dist/
 
 # Preview production
@@ -412,15 +441,17 @@ npm run preview       # → http://localhost:4173
 ```
 
 ### Code Style
+
 - **ESLint**: React hooks rules enabled
 - **File naming**: PascalCase components, camelCase services
 - **Import style**: Relative imports với .jsx extensions
 - **Component structure**: Functional components với hooks
 
 ### Environment Variables
+
 ```env
 VITE_FIREBASE_API_KEY=your_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com  
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
 VITE_FIREBASE_PROJECT_ID=your_project_id
 VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
 VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
@@ -432,6 +463,7 @@ VITE_FIREBASE_APP_ID=your_app_id
 ## 🚀 Deployment
 
 ### Firebase Hosting Setup
+
 ```bash
 # Install Firebase CLI
 npm install -g firebase-tools
@@ -448,8 +480,9 @@ firebase deploy
 ```
 
 ### Production Checklist
+
 - [ ] Environment variables configured
-- [ ] Firestore security rules setup  
+- [ ] Firestore security rules setup
 - [ ] Firebase Storage rules configured
 - [ ] Error logging enabled
 - [ ] Performance monitoring setup
@@ -459,12 +492,14 @@ firebase deploy
 ## 📊 Performance Considerations
 
 ### Optimization Strategies
+
 - **Code splitting**: Route-based lazy loading
 - **Image optimization**: WebP format, responsive images
 - **Bundle analysis**: Vite bundle analyzer
 - **Firebase optimization**: Efficient queries, caching
 
-### Real-time Efficiency  
+### Real-time Efficiency
+
 - **Client-side sorting**: Tránh Firestore index requirements
 - **Selective updates**: Chỉ sync user's own data
 - **Connection management**: Proper cleanup listeners
@@ -476,20 +511,23 @@ firebase deploy
 ### Common Issues
 
 #### Firestore Index Error
+
 ```javascript
 // Lỗi: The query requires an index
 // Giải pháp: Bỏ orderBy, sort ở client-side
-const q = query(ref, where("uid", "==", uid)); // ✅ 
+const q = query(ref, where("uid", "==", uid)); // ✅
 // Thay vì: query(ref, where("uid", "==", uid), orderBy("createdAt", "desc")); // ❌
 ```
 
-#### File Upload Issues  
+#### File Upload Issues
+
 - **CORS errors**: Check Firebase Storage rules
 - **File size**: Validate before upload
 - **Network issues**: Implement retry logic
 
 #### Authentication Problems
-- **Email verification**: Optional but recommended  
+
+- **Email verification**: Optional but recommended
 - **Password strength**: Client-side validation
 - **Session persistence**: Firebase handles automatically
 
@@ -498,27 +536,30 @@ const q = query(ref, where("uid", "==", uid)); // ✅
 ## 📝 API Reference
 
 ### Authentication Context
+
 ```javascript
 const { user, loading, login, register, logout } = useAuth();
 ```
 
 ### Activities Service
+
 ```javascript
-import { 
-  addActivity, 
-  subscribeMyActivities, 
-  updateActivity, 
-  removeActivity 
-} from './services/activitiesService.js';
+import {
+  addActivity,
+  subscribeMyActivities,
+  updateActivity,
+  removeActivity,
+} from "./services/activitiesService.js";
 ```
 
 ### Upload Service
+
 ```javascript
-import { 
-  uploadActivityFile, 
-  uploadMultipleFiles, 
-  validateFile 
-} from './services/uploadService.js';
+import {
+  uploadActivityFile,
+  uploadMultipleFiles,
+  validateFile,
+} from "./services/uploadService.js";
 ```
 
 ---

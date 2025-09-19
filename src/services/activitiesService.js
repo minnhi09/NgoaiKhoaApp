@@ -53,7 +53,7 @@ export function subscribeMyActivities(uid, callback) {
 
   const unsub = onSnapshot(q, (snap) => {
     const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-    
+
     // Sort ở client side theo createdAt desc
     const sortedList = list.sort((a, b) => {
       const aTime = a.createdAt?.toMillis?.() || 0;

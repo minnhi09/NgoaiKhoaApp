@@ -1,7 +1,7 @@
 import { useState } from "react";
 import FileUpload from "./FileUpload.jsx";
 
-export default function ActivityForm({ onCreate }) {
+export default function ActivityForm({ onCreate, uid }) {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [category, setCategory] = useState("volunteer");
@@ -141,7 +141,11 @@ export default function ActivityForm({ onCreate }) {
       </div>
 
       {/* File Upload */}
-      <FileUpload onUpload={handleFileUpload} existingFiles={attachments} />
+      <FileUpload
+        onUpload={handleFileUpload}
+        existingFiles={attachments}
+        uid={uid}
+      />
 
       {/* Submit button */}
       <button

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import FileUpload from "./FileUpload.jsx";
 
-export default function ActivityEditModal({ activity, onSave, onClose }) {
+export default function ActivityEditModal({ activity, onSave, onClose, uid }) {
   const [formData, setFormData] = useState({
     title: "",
     date: "",
@@ -250,7 +250,7 @@ export default function ActivityEditModal({ activity, onSave, onClose }) {
               </p>
             )}
 
-            <FileUpload onUpload={handleFileUpload} />
+            <FileUpload onUpload={handleFileUpload} uid={uid} />
           </div>
 
           {/* Action buttons */}

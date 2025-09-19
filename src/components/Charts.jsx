@@ -93,22 +93,13 @@ export function CategoryChart({ activities }) {
 
   if (Object.keys(categoryData).length === 0) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-500">
-        <div className="text-center">
-          <svg
-            className="mx-auto h-12 w-12 text-gray-300 mb-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 00-2 2h2a2 2 0 002-2V5a2 2 0 00-2-2z"
-            />
-          </svg>
-          <p>Chưa có dữ liệu để hiển thị</p>
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center p-8">
+          <div className="text-4xl mb-3">📊</div>
+          <h4 className="font-medium text-gray-900 mb-2">Biểu đồ thống kê</h4>
+          <p className="text-gray-500 text-sm">
+            Thêm hoạt động để xem phân bố theo danh mục
+          </p>
         </div>
       </div>
     );
@@ -222,22 +213,15 @@ export function MonthlyChart({ activities }) {
 
   if (sortedMonths.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-500">
-        <div className="text-center">
-          <svg
-            className="mx-auto h-12 w-12 text-gray-300 mb-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
-          <p>Chưa có dữ liệu để hiển thị biểu đồ</p>
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center p-8">
+          <div className="text-4xl mb-3">📈</div>
+          <h4 className="font-medium text-gray-900 mb-2">
+            Xu hướng theo tháng
+          </h4>
+          <p className="text-gray-500 text-sm">
+            Thêm hoạt động để xem xu hướng theo thời gian
+          </p>
         </div>
       </div>
     );

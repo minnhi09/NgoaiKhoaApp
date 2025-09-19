@@ -1,39 +1,26 @@
 import { useState } from "react";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../lib/firebase";
+import {
+  validateFile,
+  generatePreviewURL,
+  uploadActivityFile,
+} from "../services/uploadService";
 
-export default function FileUpload({ onUpload, existingFiles = [] }) {
+export default function FileUpload({ onUpload, existingFiles = [], uid }) {
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
-
-  const allowedTypes = [
-    "image/jpeg",
-    "image/jpg",
-    "image/png",
-    "application/pdf",
-  ];
-  const maxSize = 5 * 1024 * 1024; // 5MB
-
-  const validateFile = (file) => {
-    if (!allowedTypes.includes(file.type)) {
-      return "Chỉ chấp nhận file JPG, PNG hoặc PDF";
-    }
-    if (file.size > maxSize) {
-      return "File không được vượt quá 5MB";
-    }
-    return null;
-  };
+  const [uploadProgress, setUploadProgress] = useState({});
 
   const handleFileSelect = (selectedFiles) => {
-    const newFiles = Array.from(selectedFiles).map((file) => ({
-      file,
-      id: Math.random().toString(36).substr(2, 9),
-      error: validateFile(file),
-      preview: file.type.startsWith("image/")
-        ? URL.createObjectURL(file)
-        : null,
-    }));
+    const newFiles = Array.from(selectedFiles).map((file) => {
+      const validation = validateFile(file);
+      return {
+        file,
+        id: Math.random().toString(36).substr(2, 9),
+        error: validation === true ? null : validation,
+        preview: generatePreviewURL(file),
+      };
+    });
 
     setFiles((prev) => [...prev, ...newFiles]);
   };
@@ -52,29 +39,28 @@ export default function FileUpload({ onUpload, existingFiles = [] }) {
     const validFiles = files.filter((f) => !f.error);
     if (validFiles.length === 0) return;
 
+    if (!uid) {
+      alert("Lỗi: Không xác định được user ID");
+      return;
+    }
+
     setUploading(true);
     try {
       const uploadPromises = validFiles.map(async (fileObj) => {
-        const storageRef = ref(
-          storage,
-          `activities/${Date.now()}_${fileObj.file.name}`
-        );
-        const snapshot = await uploadBytes(storageRef, fileObj.file);
-        const url = await getDownloadURL(snapshot.ref);
-
-        return {
-          name: fileObj.file.name,
-          type: fileObj.file.type,
-          size: fileObj.file.size,
-          url: url,
-          uploadedAt: new Date().toISOString(),
+        const onProgress = (progress) => {
+          setUploadProgress((prev) => ({
+            ...prev,
+            [fileObj.id]: progress,
+          }));
         };
+
+        return uploadActivityFile(fileObj.file, uid, null, onProgress);
       });
 
       const uploadedFiles = await Promise.all(uploadPromises);
       onUpload(uploadedFiles);
 
-      // Clear files after upload
+      // Clear files and progress after upload
       files.forEach((f) => f.preview && URL.revokeObjectURL(f.preview));
       setFiles([]);
     } catch (error) {

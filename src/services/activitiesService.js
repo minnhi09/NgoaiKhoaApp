@@ -16,12 +16,16 @@ import {
 const COL = "activities";
 
 export async function addActivity(uid, data) {
+  if (!uid) {
+    throw new Error("UID is required to save activity");
+  }
+
   const ref = collection(db, COL);
   const monthKey = data.date
     ? new Date(data.date).toISOString().slice(0, 7)
     : null;
 
-  await addDoc(ref, {
+  const activityDoc = {
     uid,
     title: data.title || "",
     date: data.date || null,
@@ -33,16 +37,33 @@ export async function addActivity(uid, data) {
     monthKey,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
-  });
+  };
+
+  const docRef = await addDoc(ref, activityDoc);
+  return docRef.id;
 }
 
 export function subscribeMyActivities(uid, callback) {
+  if (!uid) {
+    return () => {};
+  }
+
   const ref = collection(db, COL);
-  const q = query(ref, where("uid", "==", uid), orderBy("createdAt", "desc"));
+  const q = query(ref, where("uid", "==", uid));
+
   const unsub = onSnapshot(q, (snap) => {
     const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-    callback(list);
+    
+    // Sort ở client side theo createdAt desc
+    const sortedList = list.sort((a, b) => {
+      const aTime = a.createdAt?.toMillis?.() || 0;
+      const bTime = b.createdAt?.toMillis?.() || 0;
+      return bTime - aTime;
+    });
+
+    callback(sortedList);
   });
+
   return unsub;
 }
 

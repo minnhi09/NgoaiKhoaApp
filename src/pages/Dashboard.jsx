@@ -141,7 +141,7 @@ export default function Dashboard() {
 
         <div className="grid lg:grid-cols-4 gap-6">
           <div className="lg:col-span-1 space-y-6">
-            <ActivityForm onCreate={handleCreate} />
+            <ActivityForm onCreate={handleCreate} uid={user.uid} />
             {userProfile && (
               <ScoreTargetCard
                 currentScore={stats.totalScore}
@@ -200,6 +200,7 @@ export default function Dashboard() {
           activity={editingActivity}
           onSave={handleSaveEdit}
           onClose={() => setEditingActivity(null)}
+          uid={user.uid}
         />
       )}
     </div>

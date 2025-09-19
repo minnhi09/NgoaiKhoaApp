@@ -14,10 +14,11 @@ export default function Header() {
     if (user) {
       getUserProfile(user.uid)
         .then((profile) => {
-          setUserProfile(profile);
-          // Nếu chưa có displayName, tự động mở modal
-          if (!profile.displayName) {
-            setShowProfileModal(true);
+          if (profile) {
+            setUserProfile(profile);
+            if (!profile.displayName) {
+              setShowProfileModal(true);
+            }
           }
         })
         .catch(console.error);

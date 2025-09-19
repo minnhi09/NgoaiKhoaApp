@@ -17,18 +17,7 @@ export async function getUserProfile(uid) {
     if (docSnap.exists()) {
       return { id: docSnap.id, ...docSnap.data() };
     } else {
-      // Tạo profile mặc định nếu chưa có
-      const defaultProfile = {
-        displayName: "",
-        class: "",
-        faculty: "",
-        scoreTarget: 100,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      };
-
-      await setDoc(docRef, defaultProfile);
-      return { id: uid, ...defaultProfile };
+      return null;
     }
   } catch (error) {
     console.error("Error getting user profile:", error);

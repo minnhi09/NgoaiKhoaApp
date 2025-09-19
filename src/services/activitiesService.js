@@ -16,8 +16,11 @@ import {
 const COL = "activities";
 
 export async function addActivity(uid, data) {
-  // data gồm: title*, date*, category*, location, score, note, attachments[]
   const ref = collection(db, COL);
+  const monthKey = data.date
+    ? new Date(data.date).toISOString().slice(0, 7)
+    : null;
+
   await addDoc(ref, {
     uid,
     title: data.title || "",
@@ -27,6 +30,7 @@ export async function addActivity(uid, data) {
     score: Number(data.score || 0),
     note: data.note || "",
     attachments: data.attachments || [],
+    monthKey,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });

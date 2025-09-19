@@ -23,10 +23,8 @@ export default function Dashboard() {
   const [userProfile, setUserProfile] = useState(null);
   const [filters, setFilters] = useState({});
 
-  // Apply filters to activities
   const filteredItems = applyFilters(items, filters);
 
-  // Tính toán thống kê
   const stats = {
     totalActivities: items.length,
     totalScore: items.reduce((sum, item) => sum + (item.score || 0), 0),
@@ -44,26 +42,21 @@ export default function Dashboard() {
   useEffect(() => {
     if (!user) return;
 
-    // Load activities
-    const unsub = subscribeMyActivities(user.uid, (activities) => {
-      console.log("Activities loaded:", activities);
-      setItems(activities);
-    });
+    const unsub = subscribeMyActivities(user.uid, setItems);
 
-    // Load user profile
-    getUserProfile(user.uid).then(setUserProfile).catch(console.error);
+    getUserProfile(user.uid)
+      .then((profile) => {
+        if (profile) {
+          setUserProfile(profile);
+        }
+      })
+      .catch(console.error);
 
     return () => unsub && unsub();
   }, [user]);
 
   async function handleCreate(data) {
-    console.log("Creating activity:", data);
-    try {
-      await addActivity(user.uid, data);
-      console.log("Activity created successfully");
-    } catch (error) {
-      console.error("Error creating activity:", error);
-    }
+    await addActivity(user.uid, data);
   }
 
   async function handleDelete(id) {
@@ -77,14 +70,8 @@ export default function Dashboard() {
   }
 
   async function handleSaveEdit(id, data) {
-    console.log("Updating activity:", id, data);
-    try {
-      await updateActivity(id, data);
-      console.log("Activity updated successfully");
-      setEditingActivity(null);
-    } catch (error) {
-      console.error("Error updating activity:", error);
-    }
+    await updateActivity(id, data);
+    setEditingActivity(null);
   }
 
   async function handleUpdateTarget(newTarget) {

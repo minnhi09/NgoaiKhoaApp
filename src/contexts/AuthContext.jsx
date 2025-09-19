@@ -18,9 +18,11 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (u) => {
       if (u) {
-        // Đảm bảo user profile tồn tại khi login
         try {
-          await ensureUserProfile(u.uid, u.email);
+          await ensureUserProfile(u.uid, {
+            email: u.email || "",
+            displayName: u.displayName || "",
+          });
         } catch (error) {
           console.error("Error ensuring user profile:", error);
         }
